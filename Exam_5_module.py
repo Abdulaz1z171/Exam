@@ -1,6 +1,5 @@
-import psycopg2
-from typing import List
-"""
+# n42 Aliyev Abdulaziz 
+
 #  1.	Postgresql bazaga python yordamida ulaning . Product nomli jadval yarating  (id,name,price, color,image) . 
 import psycopg2
 from typing import List
@@ -27,8 +26,6 @@ create_products_table = '''
         image VARCHAR(255) NOT NULL
 
     );
-
-
 '''
 
 cur.execute(create_products_table)
@@ -78,26 +75,98 @@ my_alphabet = ['A','B','D','E','F','G','H','J','K','L','M','N','O','P','Q','R','
 alphabet = Alphabet(my_alphabet)
 
 
-# for i in alphabet:
-#     print(i)
-
+for i in alphabet:
+    print(i)
+"""
 
 # 4.	print_numbers va print_leters nomli funksiyalar yarating. 
 # prit_numbers funksiyasi (1,5) gacha bo’lgan sonlarni , print_letters esa
 #   ‘’ABCDE” belgilarni loop da bitta dan time sleep(1) qo’yib ,parallel 2ta
 #  thread yarating.Ekranga parallel ravishda itemlar chiqsin.
 #
-from decimal import Decimal
 
-def print_numbers(n:int):
-    for i in range(n):
-        return i
+import time
+
+
+def print_numbers():
+    for i in range(1, 6):
+        print(i)
+        time.sleep(1)
+
+
+def print_letters():
+    arr = ['One', 'Two', 'Three', 'Fourth', 'Five', 'Six']
+    for i in arr:
+        print(i)
+        time.sleep(1)
+
+
+# thread1 = threading.Thread(target=print_numbers)
+# thread2 = threading.Thread(target=print_letters)
+#
+# start = time.time()
+
+# thread1.start()
+# thread2.start()
+#
+# thread1.join()
+# thread2.join()
+
+
+
+
+
+# 5.	Product nomli class yarating (1 – misoldagi Product ).Product classiga save() nomli object method yarating.Uni vazifasi object attributelari orqali bazaga saqlasin.
+
+class Person:
+    def __init__(self,name,price,color,image):
+        self.name = name 
+        self.price = price
+        self.color = color
+        self.image = image
+
+
+    def save(self):
+        insert_into_to_product = '''
+        INSERT INTO products(name,price,color,image)
+        VALUES              (%s,%s,%s,%s);
+
+        '''
+        insert_into_params = (self.name,self.price,self.color,self.image)
+        cur.execute(insert_into_to_product,insert_into_params)
+        conn.commit()
+
+
+
+
+# 6.	DbConnect nomli ContextManager yarating. Va uning vazifasi python orqali PostGresqlga ulanish (conn,cur)
+
+import psycopg2
+db_parameters = {
+    'host' : 'localhost',
+    'database' : 'n42',
+    'user' : 'postgres',
+    'password' : 'temur_1336',
+    'port' : 5432
+}
+
+# DbConnect contex manager yaratamiz
+class DbConnect:
+    def __init__(self,db_parameters):
+     
+        self.db_parameters = db_parameters
+        self.conn = psycopg2.connect(**db_parameters)
+    
+    def __enter__(self):
+        
+        self.cur = self.conn.cursor()
+        return self.cur
+
+    def __exit__(self,exc_tb,exc_type,exc_val):
+        if self.conn and not self.conn.closed:
+            self.conn.commit()
+            self.conn.close()
 
     
-def print_letters(letter:str):
-    for i in len(letter):
-        print(letter[i])
-    
-print_letters('absd')
-
+#7
 
