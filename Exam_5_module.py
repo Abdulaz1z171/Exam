@@ -95,9 +95,9 @@ def print_numbers():
 
 
 def print_letters():
-    arr = ['One', 'Two', 'Three', 'Fourth', 'Five', 'Six']
-    for i in arr:
-        print(i)
+    arr = ['ABCD']
+    for i in len(arr):
+        print(arr[i])
         time.sleep(1)
 
 
